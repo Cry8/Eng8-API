@@ -1,14 +1,44 @@
 import server from '../utils/server';
-import cors from 'cors';
-import helmet from 'helmet';
-import express from 'express';
-import 'dotenv/config';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUI from 'swagger-ui-express';
 
 
-server.use(cors());
-server.use(helmet());
-server.use(express.json());
+const swaggerDefinition = {
+    openapi: '3.0.0',
+    info: {
+        title: 'ENG8 Rest Api',
+        version: '1.0.0'
+    },
+    components: {
+        securitySchemes: {
+            bearerAuth: {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT',
+            }
+        }
+    },
+    security: [{
+        bearerAuth: []
+    }],
+    servers: [
+        {
+            url: 'http://localhost:8080',
+            description: "Development Server"
+        }
+    ]
+};
 
+const options = {
+    swaggerDefinition,
+    apis: ['./src/routes/*.ts']
+}
+
+
+const swaggerSpec = swaggerJSDoc(options);
+
+
+server.use('/', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 
 server.get('/health-check', (req, res) => {
