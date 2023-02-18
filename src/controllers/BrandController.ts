@@ -70,3 +70,62 @@ export async function createNewBrand(req: Request, res: Response) {
     }
 
 }
+
+export async function EditBrandInformation(req: Request, res: Response) {
+    try {
+        const data: any = req.body;
+
+         // @ts-ignore
+        const brand_user_account: User | undefined = await User.query().findById(req.user.user_id);
+
+        if (!brand_user_account) {
+            return SendResponse({
+                data: "Please re-authenticate onto Eng8!",
+                responseObj: res,
+                status: false,
+                statusCode: 400
+            })
+        }
+
+        if (brand_user_account.user_type == 'fan') {
+            return SendResponse({
+                data: "Authenticated User is not a Brand!",
+                responseObj: res,
+                status: false,
+                statusCode: 400
+            })
+        }
+        // @ts-ignore
+        const brand: Brand | undefined = await Brand.query().findOne({ user_id: req.user.user_id});
+
+        if (!brand) {
+            return SendResponse({
+                data: "Brand does not exist",
+                responseObj: res,
+                status: false,
+                statusCode: 500
+            })
+        }
+
+        const updatedBrand: Brand | undefined = await Brand.query().patch(data).findById(brand.id);
+
+        return SendResponse({
+            data: {
+                message: "Brand updated successfuly!",
+                brand_id: brand.id
+            },
+            responseObj: res,
+            status: true,
+            statusCode: 200
+        })
+
+
+    } catch (err: any) {
+        return SendResponse({
+            data: err.message || 'An Error occurred. Please try again',
+            responseObj: res,
+            status: false,
+            statusCode: 500
+        })
+    }
+}
