@@ -68,3 +68,64 @@ export async function createNewFan(req: Request , res: Response) {
         })
     }
 }
+
+export async function EditFanInformation(req: Request, res: Response) {
+    try {
+        const data: any = req.body;
+
+        // @ts-ignore
+        const fan_user_account: User | undefined = await User.query().findById(req.user.user_id);
+
+        if (!fan_user_account) {
+            return SendResponse({
+                data: "Please re-authenticate onto Eng8!",
+                responseObj: res,
+                status: false,
+                statusCode: 400
+            })
+        }
+
+        if (fan_user_account.user_type == 'brand') {
+            return SendResponse({
+                data: "Authenticated User is not a Fan!",
+                responseObj: res,
+                status: false,
+                statusCode: 400
+            })
+        }
+        // @ts-ignore
+        const fan: Fan | undefined = await Fan.query().findOne({ user_id: req.user.user_id});
+
+        if (!fan) {
+            return SendResponse({
+                data: "Fan does not exist",
+                responseObj: res,
+                status: false,
+                statusCode: 400
+            })
+        }
+
+        const updatedFan: Fan | undefined = await Fan.query().patch(data).findById(fan.id);
+
+        console.log(updatedFan)
+
+        return SendResponse({
+            data: {
+                message: "Fan updated successfuly!",
+                fan_id: fan.id 
+            },
+            responseObj: res,
+            status: true,
+            statusCode: 200
+        })
+
+
+    } catch (err: any) {
+        return SendResponse({
+            data: err.message || 'An Error occurred. Please try again',
+            responseObj: res,
+            status: false,
+            statusCode: 500
+        })
+    }
+}

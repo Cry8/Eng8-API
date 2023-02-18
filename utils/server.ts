@@ -3,6 +3,8 @@ import userRoutes from '../src/routes/User';
 import otpRoutes from '../src/routes/OTP';
 import brandRoutes from '../src/routes/Brand';
 import fanRoutes from '../src/routes/Fan';
+import uploadRoutes from '../src/routes/Upload';
+
 import cors from 'cors';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
@@ -33,5 +35,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/otp', otpRoutes);
 app.use('/api/brands', brandRoutes);
 app.use('/api/fans', fanRoutes);
+app.use('/api/uploads', uploadRoutes);
+
 
 export default app

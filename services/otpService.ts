@@ -1,9 +1,7 @@
 import { BaseModel } from "../interfaces/baseModel";
 import { OTP, OTPRequests } from "../src/models/Otp";
-import { User } from "../src/models/User";
 import OTPGenerator from 'otp-generator';
 import AddMinutesToDate from "../utils/addTime";
-import {  OTPRequest } from "../interfaces/Otp";
 
 export async function generateOTP<T>(user_id: number): Promise<BaseModel<T>> {
     try {
@@ -19,7 +17,7 @@ export async function generateOTP<T>(user_id: number): Promise<BaseModel<T>> {
          await OTPRequests.query().insert({
             otp_id: created_otp.id,
             user_id: user_id
-        } as OTPRequest);
+        });
     
     
         return {

@@ -1,6 +1,8 @@
 import { JSONSchema, Model } from "objection";
+import ObjectionVisibility from "objection-visibility";
 
-export class User extends Model {
+
+export class User extends ObjectionVisibility(Model) {
     id!: number;
     username!: string;
     email!: string;
@@ -9,6 +11,8 @@ export class User extends Model {
     password!: string;
     created_at!: Date;
     updated_at!: Date;
+
+    static hidden = ["password", "created_at", "updated_at", "is_verified"]
 
     static get tableName() {
         return "users";

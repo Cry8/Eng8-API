@@ -205,10 +205,10 @@ export async function getUserInfo(req: Request, res: Response) {
         let info!: any;
 
         if (user_info.user_type == 'brand') {
-            info = await Brand.query().findOne({ user_id: user_info.user_id }).withGraphFetched('user');
+            info = await Brand.query().findOne({ user_id: user_info.user_id }).withGraphFetched('user').withGraphFetched('upload');
         } 
         if (user_info.user_type == 'fan') {
-            info = await Fan.query().findOne({ user_id: user_info.user_id }).withGraphFetched('user');
+            info = await Fan.query().findOne({ user_id: user_info.user_id }).withGraphFetched('user').withGraphFetched('upload');
         }
 
         return SendResponse({
@@ -216,6 +216,44 @@ export async function getUserInfo(req: Request, res: Response) {
             status: true,
             responseObj: res,
             data: info || {}
+        })
+
+    } catch (err: any) {
+        return SendResponse({
+                statusCode: 500,
+                status: false,
+                responseObj: res,
+                data: err.data || err
+        })
+    }
+}
+
+export async function CheckIfUsernameExists(req: Request, res: Response) {
+    try {
+        const { username } = req.params;
+
+        const doesUsernameExists: User | undefined = await User.query().findOne({ username });
+
+        if (doesUsernameExists) {
+            return SendResponse({
+                statusCode: 200,
+                status: true,
+                responseObj: res,
+                data: {
+                    message: "Username already exists!",
+                    status: false
+                }
+            })
+        }
+
+        SendResponse({
+                statusCode: 200,
+                status: true,
+                responseObj: res,
+                data: {
+                    message: "Username is available!",
+                    status: true
+                }
         })
 
     } catch (err: any) {

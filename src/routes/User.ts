@@ -1,4 +1,4 @@
-import { authenticateUser, createUser, getUserInfo } from '../controllers/UserController';
+import { authenticateUser, CheckIfUsernameExists, createUser, getUserInfo } from '../controllers/UserController';
 import express from 'express';
 import AuthenticateJWT from '../../middlewares/AuthenticateJWT';
 
@@ -72,5 +72,29 @@ router.post('/login', authenticateUser)
  *                          $ref: '#/components/schemas/Response'
  */
 router.get('/info', AuthenticateJWT, getUserInfo)
+
+
+/**
+ * @swagger
+ * /api/users/username/{username}:
+ *  get:
+ *      summary: Check if Username exists!
+ *      tags:
+ *          - Account
+ *      parameters:
+ *          - in: path
+ *            name: username
+ *            required: true
+ *            schema:
+ *              type: string
+ *      responses:
+ *          200:
+ *              description: Successfully checked if username exists
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Response'
+ */
+router.get('/username/:username', CheckIfUsernameExists);
 
 export default router;

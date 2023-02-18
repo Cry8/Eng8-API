@@ -1,7 +1,10 @@
 import { JSONSchema, Model, RelationMappings, RelationMappingsThunk} from 'objection';
+import ObjectionVisibility from "objection-visibility";
+import { Upload } from './Upload';
 import { User } from './User';
 
-export class Brand extends Model {
+
+export class Brand extends ObjectionVisibility(Model) {
     id!: number;
     brand_name!: string;
     phone_number!: string;
@@ -12,6 +15,11 @@ export class Brand extends Model {
     country!: string;
     user_id!: number;
     brand_image!: number;
+
+
+
+    static hidden = ["created_at", "updated_at"]
+
 
     static get tableName() {
         return 'brands';
@@ -43,6 +51,14 @@ export class Brand extends Model {
             join: {
                 from: 'brands.user_id',
                 to: 'users.id'
+            }
+        },
+        upload: {
+            relation: Model.HasOneRelation,
+            modelClass: Upload,
+            join: {
+                from: 'brands.profile_image',
+                to: 'uploads.id'
             }
         }
     }

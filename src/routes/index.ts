@@ -78,4 +78,11 @@
  *                  type: string
  *              profile_image:
  *                  type: integer
+ * 
+ *      CreateUpload:
+ *          type: object
+ *          properties:
+ *              imgfile:
+ *                  type: string
+ *                  format: binary
  */
