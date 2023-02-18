@@ -115,8 +115,8 @@ export async function EditBrandInformation(req: Request, res: Response) {
                 brand_id: brand.id
             },
             responseObj: res,
-            status: false,
-            statusCode: 500
+            status: true,
+            statusCode: 200
         })
 
 
